@@ -46,17 +46,12 @@
                 <a-button type="primary" @click="showDrawer">Cookies</a-button>
             </div>
 
-
         </a-tabs>
 
         <a-drawer title="Cookie Store"
                   placement="bottom" :closable="true"
                   @close="onClose" :visible="visible" :height="400" :destroyOnClose="true">
             <a-tabs defaultActiveKey="0" :animated="true" :tabPosition="'top'">
-                <!--                <a-tab-pane tab="Tab 1" key="1">Content of Tab Pane 1</a-tab-pane>-->
-                <!--                <a-tab-pane tab="Tab 2" key="2" forceRender>Content of Tab Pane 2</a-tab-pane>-->
-                <!--                <a-tab-pane tab="Tab 3" key="3">Content of Tab Pane 3</a-tab-pane>-->
-
                 <a-tab-pane v-for="(cookie,index) in cookies" :tab="cookie.name" :key="index">HELLO</a-tab-pane>
             </a-tabs>
         </a-drawer>
@@ -82,7 +77,6 @@
                     </div>
                 </div>
             </a-tabs>
-
 
         </div>
     </div>

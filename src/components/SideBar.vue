@@ -9,7 +9,7 @@
             <a-sub-menu key="sub1">
                 <span slot="title"><a-icon type="fund"/><span>Published</span></span>
 
-                <a-menu-item v-for="publish in searchPublish()"
+                <a-menu-item v-for="publish in publishes"
                              :key="publish.published_id"
                              @click="clickPublished(publish.published_id)">
                     <a-tooltip placement="right">
@@ -25,7 +25,7 @@
 
             <a-sub-menu key="sub2">
                 <span slot="title"><a-icon type="file-sync"/><span>History</span></span>
-                <a-menu-item v-for="record in searchRecord()"
+                <a-menu-item v-for="record in records"
                              :key="record.record_id"
                              @click="clickRecord(record.record_id)">
                     <a-tooltip placement="right">
@@ -48,54 +48,36 @@
         data: function () {
             return {
                 collapsed: false,
-                records: {},
-                publishes: {},
                 keywords: ''
             };
         },
         methods: {
-
-            loadHistory: function () {
-                this.$axios.get('/records').then((res) => {
-                    this.records = res.data.reverse();
-                }).catch((err) => {
-                    // eslint-disable-next-line no-console
-                    console.log(err);
-                })
-            },
-
-            loadPublished: function () {
-                this.$axios.get('/publish').then((res) => {
-                    this.publishes = res.data;
-                }).catch((err) => {
-                    // eslint-disable-next-line no-console
-                    console.log(err);
-                });
-            },
-
             fresh: function () {
-                this.loadPublished();
-                this.loadHistory();
+                this.$store.dispatch('load_record');
+                this.$store.dispatch('load_published');
             },
 
             onSearch: function () {
 
             },
 
-            searchPublish: function () {
-                let publishList = [];
-                for (let i = 0; i < this.publishes.length; ++i) {
-                    if (this.publishes[i].name.includes(this.keywords)) publishList.push(this.publishes[i]);
-                }
-                return publishList;
-            },
-            searchRecord: function () {
-                let recordList = [];
-                for (let i = 0; i < this.records.length; ++i) {
-                    if (this.records[i].name.includes(this.keywords)) recordList.push(this.records[i]);
-                }
-                return recordList;
-            },
+            // searchPublish: function () {
+            //     let publishList = [];
+            //     let publishes = this.publishes();
+            //     for (let i = 0; i < publishes; ++i) {
+            //         if (publishes[i].name.includes(this.keywords)) publishList.push(publishes[i]);
+            //     }
+            //     return publishList;
+            // },
+            //
+            // searchRecord: function () {
+            //     let recordList = [];
+            //     let records = this.records();
+            //     for (let i = 0; i < this.records.length; ++i) {
+            //         if (records[i].name.includes(this.keywords)) recordList.push(records[i]);
+            //     }
+            //     return recordList;
+            // },
 
             clickRecord: function (index) {
                 // this.$message.info('record_id is ' + index);
@@ -110,6 +92,14 @@
         },
         created() {
             this.fresh();
+        },
+        computed: {
+            records: function () {
+                return this.$store.getters.record(this.keywords);
+            },
+            publishes: function () {
+                return this.$store.getters.published(this.keywords);
+            }
         }
     }
 </script>

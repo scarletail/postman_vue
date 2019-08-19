@@ -1,12 +1,12 @@
 <template>
     <a-layout-content :style="{ margin: '24px 16px 0', overflow: 'initial' }">
         <div class="card-container">
-            <a-tabs type="editable-card" @edit="onEdit" v-model="activeKey" :animated="{inkBar:true, tabPane:true}"
+            <a-tabs type="editable-card" @edit="onEdit" v-model="tabs.focus" :animated="{inkBar:true, tabPane:true}"
                     :size="'large'">
 
-                <a-tab-pane v-for="pane in panes" :tab="pane.title" :key="pane.key" :closable="true">
+                <a-tab-pane v-for="pane in tabs.contents" :tab="pane.title" :key="pane.key" :closable="true">
                     <PublishPanel v-if="pane.type==='publish'"></PublishPanel>
-                    <RequestPanel v-else :rec="pane.record"></RequestPanel>
+                    <RequestPanel v-else :rec="pane.content"></RequestPanel>
                 </a-tab-pane>
 
             </a-tabs>
@@ -23,53 +23,27 @@
         name: "LayoutBody",
         props: ['openedPane'],
         data() {
-            return {
-                panes: this.openedPane,
-                activeKey: 0,
-                key: 0
-            };
+            return {};
         },
         methods: {
             onEdit(targetKey, action) {
                 this[action](targetKey);
             },
             add() {
-                const panes = this.panes;
-                const activeKey = `newTab${this.key++}`;
-                panes.push({
-                    title: `New Request Tab${this.key}`,
-                    type: 'record',
-                    record: null,
-                    key: activeKey,
-                });
-                this.panes = panes;
-                this.activeKey = activeKey;
+                this.$store.dispatch('new_tab');
             },
             remove(targetKey) {
-                let activeKey = this.activeKey;
-                let lastIndex;
-                this.panes.forEach((pane, i) => {
-                    if (pane.key === targetKey) {
-                        lastIndex = i - 1;
-                    }
-                });
-                const panes = this.panes.filter(pane => pane.key !== targetKey);
-                if (lastIndex >= 0 && activeKey === targetKey) {
-                    activeKey = panes[lastIndex].key;
-                }
-                this.panes = panes;
-                this.activeKey = activeKey;
+                this.$store.dispatch('remove_tab', targetKey);
             },
         },
         components: {
-            // eslint-disable-next-line vue/no-unused-components
             RequestPanel,
-            // eslint-disable-next-line vue/no-unused-components
             PublishPanel,
         },
-        watch: {
-            panes: function () {
-                this.$emit('panesChanged', this.panes);
+        watch: {},
+        computed: {
+            tabs: function () {
+                return this.$store.getters.tabs;
             }
         }
     }

@@ -61,32 +61,16 @@
 
             },
 
-            // searchPublish: function () {
-            //     let publishList = [];
-            //     let publishes = this.publishes();
-            //     for (let i = 0; i < publishes; ++i) {
-            //         if (publishes[i].name.includes(this.keywords)) publishList.push(publishes[i]);
-            //     }
-            //     return publishList;
-            // },
-            //
-            // searchRecord: function () {
-            //     let recordList = [];
-            //     let records = this.records();
-            //     for (let i = 0; i < this.records.length; ++i) {
-            //         if (records[i].name.includes(this.keywords)) recordList.push(records[i]);
-            //     }
-            //     return recordList;
-            // },
-
             clickRecord: function (index) {
                 // this.$message.info('record_id is ' + index);
-                this.$emit('clickRecord', index);
+                // this.$emit('clickRecord', index);
+                this.$store.dispatch('new_record', index);
             },
 
             clickPublished: function (index) {
                 // this.$message.info('published_id is ' + index);
-                this.$emit('clickPublished', index);
+                // this.$emit('clickPublished', index);
+                this.$store.dispatch('new_published', index);
             }
 
         },

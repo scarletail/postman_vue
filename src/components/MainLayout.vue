@@ -5,9 +5,6 @@
         ></sidebar>
 
         <a-layout :style="{ marginLeft: '300px' }">
-            <!--            <a-layout-header :style="{ background: '#fff', padding: 0,textAlign: 'center' }">-->
-            <!--                <h1>API Test Tool</h1>-->
-            <!--            </a-layout-header>-->
             <layoutbody :opened-pane="opened" @panesChanged="panesChanged"></layoutbody>
             <a-layout-footer :style="{ textAlign: 'center' }">
                 Ant Design ©2018 Created by Ant UED

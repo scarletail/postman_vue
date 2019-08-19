@@ -5,7 +5,7 @@
                     :size="'large'">
 
                 <a-tab-pane v-for="pane in tabs.contents" :tab="pane.title" :key="pane.key" :closable="true">
-                    <PublishPanel v-if="pane.type==='publish'"></PublishPanel>
+                    <PublishPanel v-if="pane.type==='published'" :rec="pane.content"></PublishPanel>
                     <RequestPanel v-else :rec="pane.content"></RequestPanel>
                 </a-tab-pane>
 

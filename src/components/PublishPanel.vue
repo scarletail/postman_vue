@@ -1,30 +1,105 @@
 <template>
     <div>
-        <h2>This is a publish panel</h2>
-        <p>{{msg}}</p>
+        <a-back-top/>
+        <div>
+            <a-input v-model="pub.name" :size="'large'">
+                <div class="title" slot="addonBefore"><strong>NAME</strong></div>
+            </a-input>
+
+            <div style="height: 5px"></div>
+            <a-input v-model="pub.description" :size="'large'">
+                <div class="title" slot="addonBefore"><strong>DESCRIPTION</strong></div>
+            </a-input>
+
+            <div style="height: 5px"></div>
+            <div id="msg">
+                <strong>Last Check Time:</strong>&nbsp;
+                {{pub.lastCheckTime}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <strong>Is Available Now:</strong>&nbsp;
+                {{pub.available}}
+
+                <a-button-group style="float: right">
+                    <a-button icon="bars" @click="showHistory=!showHistory">HISTORY</a-button>
+                    <a-button icon="sync">UPDATE</a-button>
+                </a-button-group>
+
+            </div>
+
+            <div style="height: 10px"></div>
+            <request-panel :rec="{request:pub.request}"></request-panel>
+            <transition name="fade">
+                <div v-show="showHistory">
+                    <div style="height: 10px"></div>
+                    <h2 style="text-align: center">Test History</h2>
+                    <p v-if="tests===[]" style="text-align: center">There is no test history</p>
+                    <a-timeline mode="alternate">
+                        <a-timeline-item v-for="(test,index) in tests" :key="index"
+                                         :color="test.available?'blue':'red'">
+                            <h3>Test at {{test.test_time}}</h3>
+                            <p v-for="(bool,index) in test.result" :key="index">
+                                <strong>{{`${index+1}. ${bool?'pass':'fail'}`}}</strong>
+                            </p>
+                        </a-timeline-item>
+                    </a-timeline>
+                </div>
+            </transition>
+        </div>
     </div>
 </template>
 
 <script>
+    import RequestPanel from "./RequestPanel";
+
     export default {
         name: "PublishPanel",
+        components: {RequestPanel},
         data: function () {
             return {
-                msg: ''
+                msg: '',
+                pub: this.rec,
+                tests: [],
+                showHistory: false
             };
         },
-        props: ['params'],
-        methods: {},
+        props: ['rec'],
+        methods: {
+            // eslint-disable-next-line no-unused-vars
+            loadTestHistory: function (published_id) {
+                this.$axios.get(`/publish/tests/${published_id}`).then(res => {
+                    this.tests = res.data;
+                }).catch(err => {
+                    this.$message.error('an error occurred while load test history, see console');
+                    // eslint-disable-next-line no-console
+                    console.log(err);
+                });
+            }
+        },
         created() {
-            if (this.params == null) {
+            if (this.pub == null) {
                 this.msg = 'Publish is empty';
             } else {
-                this.msg = 'published id is ' + this.params.published_id;
+                this.msg = 'published title is ' + this.pub.name;
             }
+            this.loadTestHistory(this.pub.published_id);
+            // eslint-disable-next-line
         }
     }
 </script>
 
 <style scoped>
+    .title {
+        text-align: center;
+        width: 100px;
+    }
 
+    #msg {
+        font-size: 16px;
+        margin: 5px;
+    }
+    .fade-enter-active, .fade-leave-active {
+        transition: opacity .5s;
+    }
+    .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+        opacity: 0;
+    }
 </style>

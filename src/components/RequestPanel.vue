@@ -52,7 +52,20 @@
                   placement="bottom" :closable="true"
                   @close="onClose" :visible="visible" :height="400" :destroyOnClose="true">
             <a-tabs defaultActiveKey="0" :animated="true" :tabPosition="'top'">
-                <a-tab-pane v-for="(cookie,index) in cookies" :tab="cookie.name" :key="index">HELLO</a-tab-pane>
+                <a-tab-pane v-for="(cookie,index) in cookies" :tab="cookie.name" :key="index">
+                    <a-row>
+                        <a-col :span="20">
+                            <!--對象和數組在v-for中以兩種不同的形式遍歷-->
+                            <a-row v-for="(value,key,index) in cookie" :key="index">
+                                <a-col :span="6"><span class="cookie"><strong>{{key}}</strong></span></a-col>
+                                <a-col :span="18"><span class="cookie">{{value}}</span></a-col>
+                            </a-row>
+                        </a-col>
+                        <a-col :span="4">
+                            <a-button icon="delete" type="danger" @click="delCookie(index)"></a-button>
+                        </a-col>
+                    </a-row>
+                </a-tab-pane>
             </a-tabs>
         </a-drawer>
 
@@ -129,8 +142,6 @@
             showDrawer: function () {
                 this.$axios.get('/cookies').then(res => {
                     this.cookies = res.data;
-                    // eslint-disable-next-line no-console
-                    console.log(this.cookies);
                 }).catch(err => {
                     this.$message.error('cannot request cookies, see console');
                     // eslint-disable-next-line no-console
@@ -140,6 +151,27 @@
             },
             onClose: function () {
                 this.visible = false;
+            },
+            delCookie: function (index) {
+                let cookie = this.cookies[index];
+                this.$axios.delete('/cookies/del', {
+                    params: {
+                        domain: cookie.domain,
+                        name: cookie.name
+                    }
+                }).then(res => {
+                    if (res.data.msg === 'success') {
+                        this.$message.info('success');
+                        this.cookies.splice(index, 1);
+                    } else {
+                        this.$message.error('fail');
+                    }
+                }).catch(err => {
+                    this.$message.info('an error occurred while delete cookie see console');
+                    // eslint-disable-next-line no-console
+                    console.log(err);
+                });
+
             }
         },
         data: function () {
@@ -191,10 +223,16 @@
                     this.response = this.rec.response;
                 }
             }
+            // eslint-disable-next-line no-console
+            console.log(this.rec);
         }
     }
 </script>
 
 <style scoped>
 
+    .cookie {
+        font-size: 16px;
+        margin: 2px 2px 2px 2px;
+    }
 </style>

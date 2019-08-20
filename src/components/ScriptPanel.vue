@@ -1,23 +1,30 @@
 <template>
     <a-row :gutter="16">
         <a-col :span="20">
-            <a-textarea placeholder="Input pre-request scripts" :autosize="{ minRows: 10}"
-                        v-model="local"></a-textarea>
+            <InCoder :value="local" @input="updateLocal"></InCoder>
         </a-col>
         <a-col :span="4">
-            <div v-for="(tip,index) in tips" :key="index" style="margin: 5px">{{tip}}</div>
+            <a class="code" v-for="(tip,index) in tips" :key="index">{{tip}} </a>
         </a-col>
     </a-row>
 </template>
 
 <script>
 
+    import InCoder from "./InCoder";
+
     export default {
         name: "ScriptPanel",
+        components: {InCoder},
         props: ['text', 'tips'],
         data: function () {
             return {
                 local: this.text
+            }
+        },
+        methods: {
+            updateLocal: function (msg) {
+                this.local = msg;
             }
         },
         watch: {
@@ -29,8 +36,9 @@
 </script>
 
 <style scoped>
-    a-textarea {
-        font-family: "PT Mono", "Microsoft YaHei Mono", "Consolas", monospace;
-        font-size: 18px;
+    .code {
+        font-family: 'PT Mono', 'Microsoft Yahei Mono', 'Source Code Pro', 'Consolas', sans-serif;
+        margin: 7px;
+        display: block;
     }
 </style>

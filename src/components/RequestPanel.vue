@@ -51,7 +51,7 @@
         <a-drawer title="Cookie Store"
                   placement="bottom" :closable="true"
                   @close="onClose" :visible="visible" :height="400" :destroyOnClose="true">
-            <a-tabs defaultActiveKey="0" :animated="true" :tabPosition="'top'">
+            <a-tabs :animated="true" :tabPosition="'top'">
                 <a-tab-pane v-for="(cookie,index) in cookies" :tab="cookie.name" :key="index">
                     <a-row>
                         <a-col :span="20">
@@ -74,7 +74,8 @@
             <h4>Response</h4>
             <a-tabs>
                 <a-tab-pane tab="Body" key="Body">
-                    <a-textarea :autosize="{ minRows: 10}" :value="response.body"></a-textarea>
+                    <InCoder :value="response.body"></InCoder>
+
                 </a-tab-pane>
                 <a-tab-pane tab="Headers" key="Headers">
                     <data-table :title="'Headers'" :editable="false" :data-source="response.headers"></data-table>
@@ -100,16 +101,15 @@
     import RequestBodyPanel from "./RequestBodyPanel";
     import ScriptPanel from "./ScriptPanel";
     import TestResults from "./testResults";
+    import InCoder from "./InCoder";
 
     export default {
         name: "RequestPanel",
-        components: {TestResults, ScriptPanel, RequestBodyPanel, DataTable},
+        components: {InCoder, TestResults, ScriptPanel, RequestBodyPanel, DataTable},
         props: ['rec'],
         methods: {
             onSend: function () {
                 let requestJson = JSON.stringify(this.request);
-                // eslint-disable-next-line no-console
-                console.log(requestJson);
                 this.$axios.post('/request', requestJson, {
                     headers: {
                         'Content-Type': 'application/json;charset=UTF-8'
@@ -118,6 +118,7 @@
                     this.$message.success('request success!');
                     this.displayResponse = true;
                     this.response = res.data;
+                    this.$store.dispatch('load_record');
                 }).catch(err => {
                     this.$message.error('request failed, see console for detail');
                     // eslint-disable-next-line no-console
@@ -223,8 +224,6 @@
                     this.response = this.rec.response;
                 }
             }
-            // eslint-disable-next-line no-console
-            console.log(this.rec);
         }
     }
 </script>

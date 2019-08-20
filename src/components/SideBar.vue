@@ -50,7 +50,8 @@
         data: function () {
             return {
                 collapsed: false,
-                keywords: ''
+                keywords: '',
+                contextMenuVisible: false,
             };
         },
         methods: {

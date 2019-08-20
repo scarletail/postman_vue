@@ -2,13 +2,18 @@
     <a-layout-content :style="{ margin: '24px 16px 0', overflow: 'initial' }">
         <div class="card-container">
             <a-tabs type="editable-card" @edit="onEdit" v-model="tabs.focus" :animated="{inkBar:true, tabPane:true}"
-                    :size="'large'">
+                    :hide-add="true" :size="'large'">
 
+                <div slot="tabBarExtraContent">
+                    <a-button-group>
+                        <a-button icon="plus" type="primary" @click="add">Add</a-button>
+                        <a-button icon="close" type="danger" @click="clear">Clear</a-button>
+                    </a-button-group>
+                </div>
                 <a-tab-pane v-for="pane in tabs.contents" :tab="pane.title" :key="pane.key" :closable="true">
                     <PublishPanel v-if="pane.type==='published'" :rec="pane.content"></PublishPanel>
                     <RequestPanel v-else :rec="pane.content"></RequestPanel>
                 </a-tab-pane>
-
             </a-tabs>
         </div>
     </a-layout-content>
@@ -35,6 +40,10 @@
             remove(targetKey) {
                 this.$store.dispatch('remove_tab', targetKey);
             },
+
+            clear() {
+                this.$store.dispatch('clear');
+            }
         },
         components: {
             RequestPanel,

@@ -63,6 +63,13 @@ export default new vuex.Store({
             state.tabs.focus = index >= 0 ? contents[index].key : '';
         },
 
+        delete_all: function (state) {
+            state.tabs = {
+                focus: '',
+                contents: []
+            };
+        }
+
     },
     getters: {
         record: state => {
@@ -132,6 +139,10 @@ export default new vuex.Store({
 
         remove_tab: function ({commit}, tabKey) {
             commit('delTab', tabKey);
+        },
+
+        clear: function ({commit}) {
+            commit('delete_all');
         }
 
         //    Action 提交的是 mutation，而不是直接变更状态。

@@ -2,7 +2,8 @@
     <div class="in-coder-panel">
 
         <textarea ref="textarea"></textarea>
-        <a-select class="select" defaultValue="x-java" style="width: 120px" @change="changeMode" size="small">
+        <a-select class="select" style="width: 120px" @change="changeMode" size="small"
+                  :defaultValue="modes.find(o=>o.value===language).value">
             <a-select-option v-for="mode in modes" :key="mode.value">{{mode.label}}</a-select-option>
         </a-select>
 
@@ -44,13 +45,11 @@
             // 外部传入的语法类型
             language: {
                 type: String,
-                default: null
+                default: 'x-java'
             }
         },
         data() {
             return {
-                // 内部真实的内容
-                code: "",
                 // 默认的语法类型
                 mode: "javascript",
                 // 编辑器实例
@@ -130,12 +129,11 @@
                 // 初始化编辑器实例，传入需要被实例化的文本域对象和默认配置
                 this.coder = CodeMirror.fromTextArea(this.$refs.textarea, this.options);
                 // 编辑器赋值
-                this.coder.setValue(this.value || this.code);
+                this.coder.setValue(this.value);
 
                 // 支持双向绑定
                 this.coder.on("change", coder => {
                     this.code = coder.getValue();
-
                     if (this.$emit) {
                         this.$emit("input", this.code);
                     }
@@ -177,8 +175,17 @@
 
                 // 允许父容器通过以下函数监听当前的语法值
                 this.$emit("language-change", label);
+            },
+
+            addScript: function (text) {
+                let temp = this.coder.getValue();
+                if (temp.length === 0) {
+                    this.coder.setValue(text);
+                } else {
+                    this.coder.setValue(temp + '\n' + text);
+                }
             }
-        }
+        },
     };
 </script>
 

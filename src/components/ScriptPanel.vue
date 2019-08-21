@@ -1,10 +1,12 @@
 <template>
-    <a-row :gutter="16">
+    <a-row :gutter="20">
         <a-col :span="20">
-            <InCoder :value="local" @input="updateLocal"></InCoder>
+            <InCoder :value="local" @input="updateLocal" ref="inCoder"></InCoder>
         </a-col>
         <a-col :span="4">
-            <a class="code" v-for="(tip,index) in tips" :key="index">{{tip}} </a>
+            <h3>SNIPPETS</h3>
+            <a class="code" v-for="(tip,index) in tips" :key="index" @click.prevent="addText(index)">
+                {{tip.title}}</a>
         </a-col>
     </a-row>
 </template>
@@ -18,13 +20,17 @@
         components: {InCoder},
         props: ['text', 'tips'],
         data: function () {
+
             return {
-                local: this.text
+                local: this.text,
             }
         },
         methods: {
             updateLocal: function (msg) {
                 this.local = msg;
+            },
+            addText: function (index) {
+                this.$refs.inCoder.addScript(this.tips[index].script);
             }
         },
         watch: {

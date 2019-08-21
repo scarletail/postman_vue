@@ -1,11 +1,10 @@
 <template>
     <div>
-
-        <a-row>
+        <a-row :gutter="3">
             <a-col :span="2">
                 <a-select showSearch size="large"
                           optionFilterProp="methods"
-                          style="width: 120px" v-model="request.method">
+                          v-model="request.method" style="width: 100%">
                     <a-select-option v-for="method in requestMethods" :key="method">{{method}}
                     </a-select-option>
                 </a-select>
@@ -182,8 +181,22 @@
                     'GET', 'POST', 'PUT', 'DELETE', 'HEAD', 'OPTIONS', 'PATCH', 'TRACE'
                 ],
                 method: 'GET',
-                pre_script_tips: ['pre_script_tips1', 'pre_script_tips2', 'pre_script_tips3'],
-                tests_tips: ['tests_tips1', 'tests_tips2', 'tests_tips3'],
+                pre_script_tips: [
+                    {title: '获取一个变量', script: 'tools.getParam("paramName");'},
+                    {title: '设置一个变量', script: 'tools.setParam("paramName","value");'},
+                    {title: '计算MD5', script: 'tools.MD5("arg");'},
+                    {title: '计算SHA1', script: 'tools.SHA1("arg");'},
+                    {title: '计算SHA256', script: 'tools.SHA256("arg");'},
+                    {title: '获取时间戳', script: 'tools.getTimeStamp();'},
+                ],
+                tests_tips: [
+                    {title: '执行测试', script: 'tools.tests(expression);'},
+                    {title: '获取状态码', script: 'tools.getCode();'},
+                    {title: '获取状态消息', script: 'tools.getMsg();'},
+                    {title: '判断响应体是否包含字符串', script: 'tools.bodyContains("str");'},
+                    {title: '判断是否存在响应头', script: 'tools.hasHeader("headerName");'},
+                    {title: '获取响应头', script: 'tools.getHeader("headerName");'},
+                ],
                 displayResponse: false,
                 request_body: {
                     type: 'none',
@@ -210,7 +223,6 @@
                     testsResult: {},
                     status: '',
                 },
-
                 visible: false,
                 cookies: [],
             };

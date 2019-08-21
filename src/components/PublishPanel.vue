@@ -28,8 +28,9 @@
             <div style="height: 10px"></div>
             <request-panel :rec="{request:pub.request}"></request-panel>
             <transition name="fade">
-                <div v-show="showHistory">
+                <div v-show="showHistory" >
                     <div style="height: 10px"></div>
+                    <hr>
                     <h2 style="text-align: center">Test History</h2>
                     <p v-if="tests===[]" style="text-align: center">There is no test history</p>
                     <a-timeline mode="alternate">

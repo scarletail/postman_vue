@@ -4,7 +4,7 @@
 
             <a-radio v-for="type in bodyTypes" :key="type" :value="type">{{type}}</a-radio>
 
-            <a-select style="width: auto" v-show="b_type==='raw'"
+            <a-select style="width: auto" v-show="b_type==='raw'" size="small"
                       v-model="r_option" :dropdownMatchSelectWidth="false">
                 <a-select-option v-for="option in rawOptions" :key="option.key">{{option.value}}</a-select-option>
             </a-select>
@@ -22,18 +22,19 @@
             <data-table :title="b_type" :data-source="x_www_urlencoded"
                         @dataChanged="updateUrlEncodedData" :editable="true"></data-table>
         </div>
-        <div v-show="b_type==='raw'">
-            <a-textarea v-model="text" placeholder="Input raw body" :autosize="{ minRows: 10}"></a-textarea>
+        <div v-if="b_type==='raw'">
+            <InCoder :value="text" @input="updateText" :language="'javascript'"></InCoder>
         </div>
     </div>
 </template>
 
 <script>
     import DataTable from "./DataTable";
+    import InCoder from "./InCoder";
 
     export default {
         name: "RequestBodyPanel",
-        components: {DataTable},
+        components: {InCoder, DataTable},
         props: ['body'],
         data: function () {
             let request_body = this.body;
@@ -104,6 +105,9 @@
             updateUrlEncodedData(data) {
                 this.x_www_urlencoded = data;
             },
+            updateText(text) {
+                this.text = text;
+            }
         },
         watch: {
             b_type: function () {
@@ -118,7 +122,7 @@
             x_www_urlencoded: function () {
                 this.commitBody();
             },
-            text:function () {
+            text: function () {
                 this.commitBody();
             }
         }

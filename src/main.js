@@ -26,6 +26,6 @@ new Vue({
 // }).$mount('#app');
 
 //TODO 本周重点：
-//1. textarea代码的格式化
+//1. textarea代码的格式化 OK
 //2. 增添右键菜单
 //3. 发布的编辑

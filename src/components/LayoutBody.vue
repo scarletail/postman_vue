@@ -42,7 +42,7 @@
             },
 
             clear() {
-                this.$store.dispatch('clear');
+                this.$store.dispatch('clear_tabs');
             }
         },
         components: {

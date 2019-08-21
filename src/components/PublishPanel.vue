@@ -14,9 +14,9 @@
             <div style="height: 5px"></div>
             <div id="msg">
                 <strong>Last Check Time:</strong>&nbsp;
-                {{pub.lastCheckTime}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                {{pub.lastCheckTime||'The API has not been tested yet'}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 <strong>Is Available Now:</strong>&nbsp;
-                {{pub.available}}
+                {{pub.available||'The API has not been tested yet'}}
 
                 <a-button-group style="float: right">
                     <a-button icon="bars" @click="showHistory=!showHistory">HISTORY</a-button>
@@ -28,7 +28,7 @@
             <div style="height: 10px"></div>
             <request-panel :rec="{request:pub.request}"></request-panel>
             <transition name="fade">
-                <div v-show="showHistory" >
+                <div v-show="showHistory">
                     <div style="height: 10px"></div>
                     <hr>
                     <h2 style="text-align: center">Test History</h2>
@@ -97,10 +97,13 @@
         font-size: 16px;
         margin: 5px;
     }
+
     .fade-enter-active, .fade-leave-active {
         transition: opacity .5s;
     }
-    .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+
+    .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */
+    {
         opacity: 0;
     }
 </style>

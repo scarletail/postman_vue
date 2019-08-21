@@ -25,11 +25,19 @@ export default new vuex.Store({
         },
 
         deleteRecord: function (state, record_id) {
-            state.record = state.record.filter(o => o.record_id !== record_id);
+            if (record_id == null) {
+                state.record = [];
+            } else {
+                state.record = state.record.filter(o => o.record_id !== record_id);
+            }
         },
 
         deletePublished: function (state, published_id) {
-            state.published = state.published.filter(o => o.published_id !== published_id);
+            if (published_id == null) {
+                state.published = [];
+            } else {
+                state.published = state.published.filter(o => o.published_id !== published_id);
+            }
         },
 
         addTab: function (state, tab) {
@@ -141,8 +149,60 @@ export default new vuex.Store({
             commit('delTab', tabKey);
         },
 
-        clear: function ({commit}) {
+        clear_tabs: function ({commit}) {
             commit('delete_all');
+        },
+
+        delete_record: function ({commit}, record_id) {
+            axios.delete('/records/' + record_id).then(res => {
+                if (res.data.msg === 'success') {
+                    commit('deleteRecord', record_id);
+                } else
+                // eslint-disable-next-line no-console
+                    console.log('server error');
+            }).catch(err => {
+                // eslint-disable-next-line no-console
+                console.log(err);
+            });
+        },
+
+        delete_published: function ({commit}, published_id) {
+            axios.delete('/publish/' + published_id).then(res => {
+                if (res.data.msg === 'success') {
+                    commit('deletePublished', published_id);
+                } else
+                // eslint-disable-next-line no-console
+                    console.log('server error');
+            }).catch(err => {
+                // eslint-disable-next-line no-console
+                console.log(err);
+            });
+        },
+
+        clear_record: function ({commit}) {
+            axios.delete('/records/all').then(res => {
+                if (res.data.msg === 'success') {
+                    commit('deleteRecord', null);
+                } else
+                // eslint-disable-next-line no-console
+                    console.log('server error');
+            }).catch(err => {
+                // eslint-disable-next-line no-console
+                console.log(err);
+            });
+        },
+
+        clear_published: function ({commit}) {
+            axios.delete('/publish/all').then(res => {
+                if (res.data.msg === 'success') {
+                    commit('deletePublished', null);
+                } else
+                // eslint-disable-next-line no-console
+                    console.log('server error');
+            }).catch(err => {
+                // eslint-disable-next-line no-console
+                console.log(err);
+            });
         }
 
         //    Action 提交的是 mutation，而不是直接变更状态。

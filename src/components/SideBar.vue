@@ -2,11 +2,11 @@
     <div>
         <a-layout-sider :width="300" :collapsible="collapsed" v-model="collapsed"
                         :style="{ overflow: 'auto', height: '100vh', position: 'fixed', left: 0 }">
-
             <div class="logo">
-                <a-input-search placeholder="input search text" v-model="keywords"></a-input-search>
+                <a-input-search placeholder="input search text" v-model="keywords" @search="fresh">
+                    <a-button slot="enterButton" type="primary" icon="sync"></a-button>
+                </a-input-search>
             </div>
-
             <a-menu theme="dark" :defaultSelectedKeys="['1']" mode="inline">
 
                 <a-sub-menu key="sub1">
@@ -52,8 +52,8 @@
                 </a-sub-menu>
 
             </a-menu>
-
         </a-layout-sider>
+
         <a-drawer :title="title" placement="top" :closable="true" @close="onClose" :visible="visible">
             <div style="text-align: center">
                 <a-input v-model="name" :size="'large'" class="scaled" placeholder="please input API name">
@@ -186,4 +186,30 @@
     .scaled {
         width: 80%;
     }
+
+    .syncButton {
+        position: absolute;
+        bottom: 30px;
+        right: 30px;
+    }
+
+    /* 滚动条宽度 */
+    ::-webkit-scrollbar {
+        /* 垂直滚动条宽度 */
+        width: 8px;
+        /* 水平滚动条高度 */
+        height: 8px;
+    }
+
+    /* 滑动滑块 */
+    ::-webkit-scrollbar-thumb {
+        background-color: rgba(0, 0, 0, .3);
+        border-radius: 6px;
+    }
+
+    /* 滚动条轨道 */
+    ::-webkit-scrollbar-track {
+        background-color: #ddd;
+    }
+
 </style>

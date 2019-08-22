@@ -76,6 +76,20 @@ export default new vuex.Store({
                 focus: '',
                 contents: []
             };
+        },
+
+        update_published: function (state, payload) {
+            let published_id = payload.published_id;
+            for (let index in state.tabs.contents) {
+                let tab = state.tabs.contents[index];
+                if (tab.type === 'published' && tab.content.published_id === published_id) {
+                    tab.title = payload.name + '...';
+                    state.tabs.contents[index] = tab;
+                    // eslint-disable-next-line no-console
+                    console.log(state.tabs);
+                    break;
+                }
+            }
         }
 
     },
@@ -83,9 +97,11 @@ export default new vuex.Store({
         record: state => {
             return keywords => state.record.filter(o => o.name.includes(keywords)).reverse();
         },
+
         published: state => {
             return keywords => state.published.filter(o => o.name.includes(keywords)).reverse();
         },
+
         tabs: state => state.tabs,
     },
     actions: {

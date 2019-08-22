@@ -12,7 +12,7 @@
         </a-radio-group>
         <hr/>
         <div v-show="b_type==='none'">
-            <p style="text-align: center">This request does not have a body</p>
+            <p class="strong"><strong>This request does not have body</strong></p>
         </div>
         <div v-show="b_type==='form-data'">
             <data-table :title="b_type" :data-source="form_data"
@@ -130,5 +130,9 @@
 </script>
 
 <style scoped>
-
+    .strong {
+        text-align: center;
+        font-size: 18px;
+        font-style: italic;
+    }
 </style>

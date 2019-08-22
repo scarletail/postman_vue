@@ -14,13 +14,13 @@
             <div style="height: 5px"></div>
             <div id="msg">
                 <strong>Last Check Time:</strong>&nbsp;
-                {{pub.lastCheckTime||'The API has not been tested yet'}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <span style="font-style: italic">{{pub.lastCheckTime||'The API has not been tested yet'}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
                 <strong>Is Available Now:</strong>&nbsp;
-                {{pub.available||'The API has not been tested yet'}}
+                <span style="font-style: italic">{{pub.available||'The API has not been tested yet'}}</span>
 
                 <a-button-group style="float: right">
                     <a-button icon="bars" @click="showHistory=!showHistory">HISTORY</a-button>
-                    <a-button icon="sync">UPDATE</a-button>
+                    <a-button icon="sync" @click="reName">UPDATE</a-button>
                 </a-button-group>
 
             </div>
@@ -68,6 +68,32 @@
             loadTestHistory: function (published_id) {
                 this.$axios.get(`/publish/tests/${published_id}`).then(res => {
                     this.tests = res.data;
+                }).catch(err => {
+                    this.$message.error('an error occurred while load test history, see console');
+                    // eslint-disable-next-line no-console
+                    console.log(err);
+                });
+            },
+
+            reName: function () {
+                let published_id = this.pub.published_id;
+                this.$axios.get('/publish/rename', {
+                    params: {
+                        published_id: published_id,
+                        name: this.pub.name,
+                        description: this.pub.description,
+                    }
+                }).then(res => {
+                    if (res.data.msg === 'success') {
+                        this.$message.success('success to sync');
+                        this.$store.dispatch('load_published');
+                        this.$store.commit('update_published', {
+                            published_id: published_id,
+                            name: this.pub.name,
+                        });
+                    } else {
+                        this.$message.warn('fail to sync');
+                    }
                 }).catch(err => {
                     this.$message.error('an error occurred while load test history, see console');
                     // eslint-disable-next-line no-console
